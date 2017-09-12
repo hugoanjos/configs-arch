@@ -1,0 +1,23 @@
+#!/bin/bash
+# dmenu-session -- A session menu using systemd and dmenu
+# Written by Renan Guilherme <japareaggae@gmail.com>
+# Licensed under the public domain <http://unlicense.org/UNLICENSE>
+
+option=$( printf "cancel\nlock\nlogout\nshutdown\nreboot\nsuspend\nhibernate\n" | dmenu -p Session )
+
+_getOut(){
+	(pgrep 'i3' > /dev/null) && i3 exit
+	(pgrep 'bspwm' > /dev/null ) && bspc quit
+	(pgrep 'openbox' > /dev/null ) && openbox --exit
+}
+
+case $option in
+	lock) $HOME/.bin/i3lock-bw ;;
+	logout) _getOut;;
+	shutdown) systemctl poweroff;;
+	reboot) systemctl reboot;;
+	suspend) systemctl suspend;;
+	hibernate) systemctl hibernate;;
+	*) ;;
+esac
+
